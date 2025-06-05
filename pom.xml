@@ -9,7 +9,7 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.github.inncontrol</groupId>
-    <artifactId>g</artifactId>
+    <artifactId>communications-service</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>communications-service</name>
     <description>communications-service</description>
