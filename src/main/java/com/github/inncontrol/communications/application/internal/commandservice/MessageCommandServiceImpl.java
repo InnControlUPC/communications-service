@@ -5,10 +5,11 @@ import com.github.inncontrol.communications.domain.model.command.CreateMessageCo
 import com.github.inncontrol.communications.domain.model.command.MarkMessageAsReadCommand;
 import com.github.inncontrol.communications.domain.services.MessageCommandService;
 import com.github.inncontrol.communications.infrastructure.persistence.jpa.repositories.MessageRepository;
-import com.github.inncontrol.shared.application.internal.outboundedservices.acl.ExternalProfileService;
+import com.github.inncontrol.shared.application.internal.outboundedservices.acl.ExternalEmployeeService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -16,16 +17,19 @@ import java.util.Optional;
 public class MessageCommandServiceImpl implements MessageCommandService {
 
     private final MessageRepository messageRepository;
-    protected final ExternalProfileService externalProfileService;
+    private final ExternalEmployeeService externalEmployeeService;
 
     @Override
     public Optional<Message> handle(CreateMessageCommand command) {
-        var sender = externalProfileService.fetchProfileIdByEmail(command.senderEmail());
-        var receiver = externalProfileService.fetchProfileIdByEmail(command.receiverEmail());
-        if (sender.isEmpty() || receiver.isEmpty()) {
-            throw new IllegalArgumentException("Sender or receiver not found");
+        var senderEmployee = externalEmployeeService.getEmployeeByQuery(Map.of("email", command.senderEmail()));
+        if (senderEmployee.getBody() == null) {
+            throw new IllegalArgumentException("Sender employee not found");
         }
-        var message = new Message(sender.get().profileId(), receiver.get().profileId(), command.content());
+        var receiverEmployee = externalEmployeeService.getEmployeeByQuery(Map.of("email", command.receiverEmail()));
+        if (receiverEmployee.getBody() == null) {
+            throw new IllegalArgumentException("Receiver employee not found");
+        }
+        var message = new Message(senderEmployee.getBody().profileId(), receiverEmployee.getBody().profileId(), command.content());
         return Optional.of(messageRepository.save(message));
     }
 
