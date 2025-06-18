@@ -3,16 +3,21 @@ version: '3.8'
 services:
   postgres:
     image: postgres:15
-    container_name: notifications_postgres
+    container_name: communications-postgres
     restart: always
     environment:
-      POSTGRES_DB: notifications_db
-      POSTGRES_USER: notifications_user
-      POSTGRES_PASSWORD: notifications_password
+      POSTGRES_DB: communications_db
+      POSTGRES_USER: communications_user
+      POSTGRES_PASSWORD: communications_password
     ports:
       - "5892:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+
+  communications-service:
+    build:
+      context: .
+
 
 volumes:
   postgres_data:
