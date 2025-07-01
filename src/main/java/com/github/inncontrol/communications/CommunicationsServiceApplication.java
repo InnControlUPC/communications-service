@@ -14,7 +14,6 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
         ExternalEmployeeService.class
 })
 @EnableHystrix
-@EnableHystrixDashboard
 public class CommunicationsServiceApplication {
 
     public static void main(String[] args) {

@@ -14,9 +14,9 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
-  communications-service:
-    build:
-      context: .
+#  communications-service:
+#    build:
+#      context: .
 
 
 volumes:
